@@ -1,17 +1,20 @@
 package com.kodilla.library.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @Entity
 @Table(name = "users")
 public class User {
@@ -28,13 +31,14 @@ public class User {
     private String surname;
 
     @Column(name = "created")
-    private Date accountCreated;
+    private Instant accountCreated = Instant.now();
 
+    @JsonIgnore
     @OneToMany(targetEntity = Hire.class,
             mappedBy = "user",
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
-    private Set<Hire> hires = new HashSet<>();
+    private List<Hire> hires = new ArrayList<>();
 
     public void addHire(Hire hire) {
         this.hires.add(hire);

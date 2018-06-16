@@ -1,16 +1,21 @@
 package com.kodilla.library.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @Entity
 @Table(name = "copies")
 public class Copy {
@@ -26,13 +31,14 @@ public class Copy {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private Status status;
+    private Status status = Status.AVAILABLE;
 
+    @JsonIgnore
     @OneToMany(targetEntity = Hire.class,
             mappedBy = "copy",
-            cascade = CascadeType.ALL,
+            cascade = {CascadeType.ALL},
             fetch = FetchType.LAZY)
-    private Set<Hire> hires = new HashSet<>();
+    private List<Hire> hires = new ArrayList<>();
 
     public void addHire(Hire hire) {
         this.hires.add(hire);

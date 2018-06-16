@@ -1,8 +1,10 @@
 package com.kodilla.library.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -11,6 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @Entity
 @Table(name = "books")
 public class Book {
@@ -28,7 +31,7 @@ public class Book {
 
     @Column(name = "year")
     private int issued;
-
+    @JsonIgnore
     @OneToMany(
             targetEntity = Copy.class,
             mappedBy = "book",
@@ -39,5 +42,12 @@ public class Book {
 
     public void addCopy(Copy copy) {
         this.copies.add(copy);
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                '}';
     }
 }

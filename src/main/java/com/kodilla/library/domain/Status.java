@@ -4,4 +4,5 @@ public enum Status {
     AVAILABLE,
     RENTED,
     LOST_DAMAGED;
+
 }
