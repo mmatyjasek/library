@@ -41,8 +41,5 @@ public class Copy {
             fetch = FetchType.LAZY)
     private List<Hire> hires = new ArrayList<>();
 
-    public void addHire(Hire hire) {
-        this.hires.add(hire);
-    }
 
 }

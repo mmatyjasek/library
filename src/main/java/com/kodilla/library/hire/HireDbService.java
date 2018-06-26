@@ -37,7 +37,7 @@ public class HireDbService {
         return hireRepository.findAll();
     }
 
-    public Optional<Hire> getHire(final Long id) {return hireRepository.findById(id);}
+    private Optional<Hire> getHire(final Long id) {return hireRepository.findById(id);}
 
     public Hire hire(final Long bookId, final Long userId) throws NotFoundEntityException {
         if(copyDbService.getNoOfCopiesOf(bookId)>0) {

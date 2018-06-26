@@ -41,9 +41,6 @@ public class Book {
     )
     private Set<Copy> copies = new HashSet<>();
 
-    public void addCopy(Copy copy) {
-        this.copies.add(copy);
-    }
 
     @Override
     public String toString() {
