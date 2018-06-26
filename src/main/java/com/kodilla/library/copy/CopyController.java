@@ -1,40 +1,39 @@
 package com.kodilla.library.copy;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/library")
+@RequestMapping("copies")
+@AllArgsConstructor
 public class CopyController {
 
     private final CopyDbService copyDbService;
-    private final  CopyMapper copyMapper;
-
-    @Autowired
-    public CopyController(CopyDbService copyDbService, CopyMapper copyMapper) {
-        this.copyDbService = copyDbService;
-        this.copyMapper = copyMapper;
-    }
-
-    @GetMapping(value = "getCopies")
-    public List<CopyDto> getCopiesOf(@RequestParam Long bookId){
-        return copyMapper.mapToCopyDtoList(copyDbService.getCopiesOf(bookId));
-    }
 
     @GetMapping(value = "getNoOfCopiesOf")
-    public Long getNoOfCopiesOf(@RequestParam Long bookId){
-        return  copyDbService.getNoOfCopiesOf(bookId);
+    public Long getNoOfCopiesOf(@RequestParam Long bookId) {
+        return copyDbService.getNoOfCopiesOf(bookId);
     }
 
-    @PostMapping(value = "createCopy")
+    @GetMapping
+    public List<CopyDto> getCopiesOf(@RequestParam Long bookId) {
+        return CopyMapper.mapToCopyDtoList(copyDbService.getCopiesOf(bookId));
+    }
+
+    @PostMapping
     public CopyDto createCopy(@RequestParam Long bookId) {
-        return copyMapper.mapToCopyDto(copyDbService.saveCopy(bookId));
+        return CopyMapper.mapToCopyDto(copyDbService.saveCopy(bookId));
     }
 
-    @DeleteMapping(value = "deleteCopy")
-    public void deleteCopy(@RequestParam Long id){
+    @DeleteMapping
+    public void deleteCopy(@RequestParam Long id) {
         copyDbService.deleteCopy(id);
     }
 

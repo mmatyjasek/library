@@ -3,6 +3,7 @@ package com.kodilla.library.book;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kodilla.library.copy.Copy;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,9 +13,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @AllArgsConstructor
+@Data
 @NoArgsConstructor
-@Getter
-@Setter
 @Entity
 @Table(name = "books")
 public class Book {
@@ -40,12 +40,4 @@ public class Book {
             fetch = FetchType.LAZY
     )
     private Set<Copy> copies = new HashSet<>();
-
-
-    @Override
-    public String toString() {
-        return "Book{" +
-                "id=" + id +
-                '}';
-    }
 }

@@ -1,7 +1,7 @@
 package com.kodilla.library.hire;
 
 import com.kodilla.library.book.Book;
-import com.kodilla.library.book.BookDbService;
+import com.kodilla.library.book.BooksDbService;
 import com.kodilla.library.copy.Copy;
 import com.kodilla.library.copy.CopyDbService;
 import com.kodilla.library.copy.Status;
@@ -9,61 +9,67 @@ import com.kodilla.library.exception.NotAvailableException;
 import com.kodilla.library.exception.NotFoundEntityException;
 import com.kodilla.library.user.User;
 import com.kodilla.library.user.UserDbService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class HireDbService {
+
+    private final int ZERO_COPIES = 0;
 
     private final HireRepository hireRepository;
     private final CopyDbService copyDbService;
-    private final BookDbService bookDbService;
+    private final BooksDbService booksDbService;
     private final UserDbService userDbService;
 
+    public Hire hire(final Long bookId, final Long userId) {
 
-    @Autowired
-    public HireDbService(HireRepository hireRepository, CopyDbService copyDbService, BookDbService bookDbService, UserDbService userDbService) {
-        this.hireRepository = hireRepository;
-        this.copyDbService = copyDbService;
-        this.bookDbService = bookDbService;
-        this.userDbService = userDbService;
+        if (copyDbService.getNoOfCopiesOf(bookId) == ZERO_COPIES) {
+            throw new NotAvailableException("No available copies of this book");
+        }
+
+        Book book = booksDbService.getBook(bookId);
+        Copy copy = book.getCopies().stream()
+                .filter(b -> b.getStatus() == Status.AVAILABLE)
+                .findFirst()
+                .get();
+        User user = userDbService.getUser(userId);
+
+        copyDbService.changeStatus(copy.getId(), Status.RENTED);
+
+        Hire hire = new Hire();
+        hire.setCopy(copy);
+        hire.setUser(user);
+
+        return hireRepository.save(hire);
     }
 
-    public List<Hire> getAllHires(){
+    List<Hire> getAllHires() {
         return hireRepository.findAll();
     }
 
-    private Optional<Hire> getHire(final Long id) {return hireRepository.findById(id);}
+    void reportLostDamage(final Long hireId) {
+        Hire hire = getHire(hireId);
 
-    public Hire hire(final Long bookId, final Long userId) throws NotFoundEntityException {
-        if(copyDbService.getNoOfCopiesOf(bookId)>0) {
-            Book book = bookDbService.getBook(bookId).orElseThrow(() -> new NotFoundEntityException("Could not found book with ID: " + bookId));
-            Copy copy = book.getCopies().stream().filter(b -> b.getStatus() == Status.AVAILABLE).findFirst().get();
-            User user = userDbService.getUser(userId).orElseThrow(() -> new NotFoundEntityException("Could not found user with ID: " + userId));
-            copyDbService.changeStatus(copy.getId(), Status.RENTED);
-            Hire hire = new Hire();
-            hire.setCopy(copy);
-            hire.setUser(user);
-            return hireRepository.save(hire);
-        } else {
-            throw new NotAvailableException("No available copies of this book");
-        }
-    }
-
-    public void reportLostDamage (final Long hireId) {
-        Hire hire = getHire(hireId).orElseThrow(() -> new NotFoundEntityException("Could not found hire with ID: " + hireId));
         Long copyId = hire.getCopy().getId();
+
         copyDbService.changeStatus(copyId, Status.LOST_DAMAGED);
     }
 
-    public void returnBook(final Long hireId) {
-        Hire hire = getHire(hireId).orElseThrow(() -> new NotFoundEntityException("Could not found hire with ID: " + hireId));
+    void returnBook(final Long hireId) {
+        Hire hire = getHire(hireId);
         hire.setReturnDate(Instant.now());
         copyDbService.changeStatus(hire.getCopy().getId(), Status.AVAILABLE);
     }
+
+    private Hire getHire(final Long id) {
+        return hireRepository.findById(id).orElseThrow(() -> new NotFoundEntityException("Could not found hire with " +
+                "ID: " + id));
+    }
+
 }
 
