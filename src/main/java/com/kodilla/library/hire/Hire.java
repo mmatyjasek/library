@@ -1,15 +1,19 @@
-package com.kodilla.library.domain;
+package com.kodilla.library.hire;
 
+import com.kodilla.library.copy.Copy;
+import com.kodilla.library.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.Instant;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @Entity
 @Table(name = "hire_history")
 public class Hire {
@@ -27,9 +31,9 @@ public class Hire {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private Date hireDate;
+    private Instant hireDate = Instant.now();
 
-    private Date returnDate;
+    private Instant returnDate;
 
 
 }
