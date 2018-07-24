@@ -7,7 +7,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.time.Instant;
 
 @AllArgsConstructor
@@ -17,6 +25,8 @@ import java.time.Instant;
 @Entity
 @Table(name = "hire_history")
 public class Hire {
+
+    private final Instant hireDate = Instant.now();
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,8 +40,6 @@ public class Hire {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
-
-    private Instant hireDate = Instant.now();
 
     private Instant returnDate;
 

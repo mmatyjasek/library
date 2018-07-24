@@ -13,16 +13,16 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class BookMapperTest {
+public class BooksMapperTest {
 
     @Autowired
-    BookMapper bookMapper;
+    BooksMapper booksMapper;
 
     @Test
     public void shouldMapToBook() {
 
         BookDto bookDto = new BookDto(1L, "Title", "Author", 1999, new HashSet<>());
-        Book book = bookMapper.mapToBook(bookDto);
+        Book book = booksMapper.mapToBook(bookDto);
 
         Assert.assertEquals(bookDto.getId(), book.getId());
         Assert.assertEquals(bookDto.getTitle(), book.getTitle());
@@ -34,7 +34,7 @@ public class BookMapperTest {
     @Test
     public void shouldMapToBookDto() {
         Book book = new Book(1L, "Title", "Author", 1999, new HashSet<>());
-        BookDto bookDto = bookMapper.mapToBookDto(book);
+        BookDto bookDto = booksMapper.mapToBookDto(book);
 
         Assert.assertEquals(book.getId(), bookDto.getId());
         Assert.assertEquals(book.getTitle(), bookDto.getTitle());
@@ -48,7 +48,7 @@ public class BookMapperTest {
         Book book = new Book(1L, "Title", "Author", 1999, new HashSet<>());
         List<Book> bookList = new ArrayList<>();
         bookList.add(book);
-        List<BookDto> bookDtoList = bookMapper.mapToBookDtoList(bookList);
+        List<BookDto> bookDtoList = booksMapper.mapToBookDtoList(bookList);
 
         Assert.assertEquals(bookList.size(), bookDtoList.size());
         Assert.assertEquals(bookList.get(0).getId(), bookDtoList.get(0).getId());

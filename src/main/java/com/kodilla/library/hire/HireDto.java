@@ -11,8 +11,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-
-public class HireDto {
+class HireDto {
 
     private Long id;
     private Copy copy;

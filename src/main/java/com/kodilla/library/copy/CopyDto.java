@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class CopyDto {
+class CopyDto {
 
     private Long id;
     private Book book;

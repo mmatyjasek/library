@@ -11,8 +11,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-
-public class BookDto {
+class BookDto {
 
     private Long id;
     private String title;

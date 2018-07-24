@@ -37,7 +37,7 @@ public class Copy {
     @JsonIgnore
     @OneToMany(targetEntity = Hire.class,
             mappedBy = "copy",
-            cascade = {CascadeType.ALL},
+            cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
     private List<Hire> hires = new ArrayList<>();
 
